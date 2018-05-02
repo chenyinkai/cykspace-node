@@ -1,8 +1,16 @@
 const relations = require('../modals/relations')
+const articles = require('../controllers/articles')
 
+/**
+ * 通过标签查询文章信息
+ *
+ * @param  {tagId} 标签Id
+ * @return {JSONArray} 返回标签对应的文章信息
+ */
 const getArticles = async ctx => {
   let condition = '' // 查询条件
-  let result = [] // 返回标签对应的文章id
+  let postIdList = []
+  let result = [] // 返回标签对应的文章信息
   if (ctx.request && ctx.request.query.tagId) {
     condition = {
       where: {
@@ -18,9 +26,14 @@ const getArticles = async ctx => {
   }
   await relations.findAll(condition).then(data => {
     for (let i = 0; i < data.length; i++) {
-      result.push(data[i].dataValues.postId)
+      postIdList.push(data[i].dataValues.postId)
     }
   })
+  for (let i = 0; i < postIdList.length; i++) {
+    await articles.getDetails(postIdList[i]).then(data => {
+      result.push(data[0])
+    })
+  }
   return result
 }
 
