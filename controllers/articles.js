@@ -16,31 +16,59 @@ const getArticles = async ctx => {
 }
 
 /**
- * 通过文章ID查询文章
+ * 通过文章ID查询文章(供标签接口使用)
  *
  * @param  {postId} 文章Id
  * @return {JSONArray} 返回文章信息
  */
 const getDetails = async postId => {
   let result = []
-  await articles.findAll({
-    where: {
-      postId: postId
-    }
-  }).then(data => {
-    for (let i = 0; i < data.length; i++) {
+  await articles
+    .findAll({
+      where: {
+        postId: postId
+      }
+    })
+    .then(data => {
       // 整理返参格式
       let resObj = {}
-      resObj.postId = data[i].dataValues.postId
-      resObj.date = data[i].dataValues.date
-      resObj.title = data[i].dataValues.title
+      resObj.postId = data[0].dataValues.postId
+      resObj.date = data[0].dataValues.date
+      resObj.title = data[0].dataValues.title
       result.push(resObj)
-    }
-  })
+    })
   return result
+}
+
+/**
+ * 通过文章ID查询文章详情
+ *
+ * @param  {postId} 文章Id
+ * @return {JSONArray} 返回文章信息
+ */
+const getDetail = async ctx => {
+  const postId = ctx.request.query.postId
+  await articles
+    .findAll({
+      where: {
+        postId: postId
+      }
+    })
+    .then(data => {
+      data[0].dataValues.msg = '文章详情查询成功'
+      data[0].dataValues.status = 200
+      ctx.body = data[0].dataValues
+    })
+    .catch(err => {
+      ctx.body = {
+        msg: err,
+        status: 999999
+      }
+    })
 }
 
 module.exports = {
   getArticles,
-  getDetails
+  getDetails,
+  getDetail
 }

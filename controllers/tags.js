@@ -20,7 +20,7 @@ const getTags = async ctx => {
       .findAll({ where: { tagId: ctx.request.query.tagId } })
       .then(data => {
         ctx.body = {
-          msg: '查询成功',
+          msg: '标签查询成功',
           status: 200,
           tagId: data[0].dataValues.tagId,
           tagName: data[0].dataValues.tag,
@@ -57,7 +57,7 @@ const getTags = async ctx => {
       })
     }
     ctx.body = {
-      msg: '查询成功',
+      msg: '标签列表查询成功',
       status: 200,
       tagsList: tagList
     }

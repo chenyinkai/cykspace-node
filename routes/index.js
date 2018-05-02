@@ -4,5 +4,6 @@ const articlesApi = require('../controllers/articles')
 
 router.get('/v1/tags', tagsApi.getTags)
 router.get('/v1/articles', articlesApi.getArticles)
+router.get('/v1/details', articlesApi.getDetail)
 
 module.exports = router
