@@ -17,7 +17,12 @@ const getTags = async ctx => {
       tagArticle = data
     })
     await tags
-      .findAll({ where: { tagId: ctx.request.query.tagId } })
+      .findAll({
+        where: {
+          tagId: ctx.request.query.tagId
+        },
+        attributes: ['tagId', 'tag']
+      })
       .then(data => {
         ctx.body = {
           msg: '标签查询成功',
@@ -35,14 +40,13 @@ const getTags = async ctx => {
       })
   } else {
     await tags
-      .findAll()
+      .findAll({
+        attributes: ['tagId', 'tag']
+      })
       .then(data => {
         for (let i = 0; i < data.length; i++) {
-          let resObj = {}
-          resObj.tagName = data[i].dataValues.tag
-          resObj.tagId = data[i].dataValues.tagId
           tagIdList.push(data[i].dataValues.tagId)
-          tagList.push(resObj)
+          tagList.push(data[i].dataValues)
         }
       })
       .catch(err => {

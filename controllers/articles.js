@@ -1,18 +1,33 @@
 const articles = require('../modals/articles')
-
+const sequelize = require('sequelize')
 /**
  * 待完成
  *
- * @param  {tagId} 标签Id
+ * @param  {pageSize, pageNum} 每页展示条数, 页码
  * @return {JSONArray} 返回标签对应的文章信息
  */
 const getArticles = async ctx => {
-  await articles.findAll().then(data => {
-    ctx.body = {
-      msg: '查询成功',
-      data: data
-    }
-  })
+  const pageSize = parseInt(ctx.request.query.pageSize)
+  const pageNum = parseInt(ctx.request.query.pageNum) - 1
+  await articles
+    .findAll({
+      offset: pageNum,
+      limit: pageSize,
+      attributes: ['postId', 'date', 'tags', 'title', 'desc', 'detail', 'readNum', 'wordCount', 'title']
+    })
+    .then(data => {
+      ctx.body = {
+        msg: '查询成功',
+        status: 200,
+        datalist: data
+      }
+    })
+    .catch(err => {
+      ctx.body = {
+        msg: err,
+        status: 999999
+      }
+    })
 }
 
 /**
@@ -27,15 +42,11 @@ const getDetails = async postId => {
     .findAll({
       where: {
         postId: postId
-      }
+      },
+      attributes: ['postId', 'date', 'title']
     })
     .then(data => {
-      // 整理返参格式
-      let resObj = {}
-      resObj.postId = data[0].dataValues.postId
-      resObj.date = data[0].dataValues.date
-      resObj.title = data[0].dataValues.title
-      result.push(resObj)
+      result.push(data[0].dataValues)
     })
   return result
 }
