@@ -8,7 +8,7 @@ const articles = sequelize.define(
       primaryKey: true
     },
     postId: Sequelize.STRING(11),
-    date: Sequelize.STRING(100),
+    date: Sequelize.BIGINT(100),
     tags: Sequelize.STRING(500),
     title: Sequelize.STRING(100),
     desc: Sequelize.STRING(1000),

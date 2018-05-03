@@ -1,5 +1,4 @@
 const articles = require('../modals/articles')
-const sequelize = require('sequelize')
 /**
  * 待完成
  *
@@ -13,13 +12,14 @@ const getArticles = async ctx => {
     .findAll({
       offset: pageNum,
       limit: pageSize,
-      attributes: ['postId', 'date', 'tags', 'title', 'desc', 'detail', 'readNum', 'wordCount', 'title']
+      attributes: ['postId', 'date', 'tags', 'title', 'desc', 'detail', 'readNum', 'wordCount', 'title'],
+      order: ['date']
     })
     .then(data => {
       ctx.body = {
         msg: '查询成功',
         status: 200,
-        datalist: data
+        datalist: data.reverse()
       }
     })
     .catch(err => {
