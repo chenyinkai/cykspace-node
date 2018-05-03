@@ -6,13 +6,30 @@ const articles = require('../modals/articles')
  * @return {JSONArray} 返回标签对应的文章信息
  */
 const getArticles = async ctx => {
-  const pageSize = parseInt(ctx.request.query.pageSize)
-  const pageNum = parseInt(ctx.request.query.pageNum) - 1
+  let pageSize = ''
+  let pageNum = ''
+  if (ctx.request.query.pageSize) {
+    pageSize = parseInt(ctx.request.query.pageSize)
+    pageNum = parseInt(ctx.request.query.pageNum) - 1
+  } else {
+    pageSize = 1000
+    pageNum = 0
+  }
   await articles
     .findAll({
       offset: pageNum,
       limit: pageSize,
-      attributes: ['postId', 'date', 'tags', 'title', 'desc', 'detail', 'readNum', 'wordCount', 'title'],
+      attributes: [
+        'postId',
+        'date',
+        'tags',
+        'title',
+        'desc',
+        'detail',
+        'readNum',
+        'wordCount',
+        'title'
+      ],
       order: ['date']
     })
     .then(data => {
