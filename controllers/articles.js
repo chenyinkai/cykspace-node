@@ -8,17 +8,12 @@ const articles = require('../modals/articles')
 const getArticles = async ctx => {
   let pageSize = ''
   let pageNum = ''
-  if (ctx.request.query.pageSize) {
-    pageSize = parseInt(ctx.request.query.pageSize)
-    pageNum = parseInt(ctx.request.query.pageNum) - 1
-  } else {
-    pageSize = 1000
-    pageNum = 0
-  }
+  let total = 0
+  await articles.findAll().then(data => {
+    total = data.length
+  })
   await articles
     .findAll({
-      offset: pageNum,
-      limit: pageSize,
       attributes: [
         'postId',
         'date',
@@ -33,10 +28,23 @@ const getArticles = async ctx => {
       order: ['date']
     })
     .then(data => {
+      let list = []
+      if (ctx.request.query.pageSize) {
+        pageSize = parseInt(ctx.request.query.pageSize)
+        pageNum = parseInt(ctx.request.query.pageNum)
+        list = data
+          .reverse()
+          .slice(pageSize * (pageNum - 1), pageSize + pageSize * (pageNum - 1))
+      } else {
+        list = data.reverse()
+      }
       ctx.body = {
         msg: '查询成功',
         status: 200,
-        datalist: data.reverse()
+        total: total,
+        pageNum: pageNum + 1,
+        pageSize: pageSize,
+        datalist: list
       }
     })
     .catch(err => {
