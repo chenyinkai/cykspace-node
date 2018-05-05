@@ -35,16 +35,41 @@ const getArticles = async ctx => {
         list = data
           .reverse()
           .slice(pageSize * (pageNum - 1), pageSize + pageSize * (pageNum - 1))
+        ctx.body = {
+          msg: '查询成功',
+          status: 200,
+          total: Math.ceil(total / pageSize),
+          pageNum: pageNum,
+          pageSize: pageSize,
+          datalist: list
+        }
       } else {
+        // 整理返参格式
         list = data.reverse()
-      }
-      ctx.body = {
-        msg: '查询成功',
-        status: 200,
-        total: total,
-        pageNum: pageNum + 1,
-        pageSize: pageSize,
-        datalist: list
+        let yearList = []
+        let result = []
+        for (let i = 0; i < list.length; i++) {
+          yearList.push(new Date(list[i].date).getFullYear())
+        }
+        yearList = [...new Set(yearList)]
+        for (let i = 0; i < yearList.length; i++) {
+          let obj = {
+            year: yearList[i],
+            list: []
+          }
+          for (let j = 0; j < list.length; j++) {
+            if (yearList[i] === new Date(list[j].date).getFullYear()) {
+              obj.list.push(list[j])
+            }
+          }
+          result.push(obj)
+        }
+        ctx.body = {
+          msg: '查询成功',
+          status: 200,
+          total: list.length,
+          datalist: result
+        }
       }
     })
     .catch(err => {
