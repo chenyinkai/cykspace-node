@@ -19,7 +19,7 @@
 + mysql + sequelize
 + nginx + pm2
 
-## 未完成的
+## 未来可能加入
 
 + 后台管理
 + 评论
@@ -46,12 +46,13 @@ npm install
 > start
 
 ```bash
-npm start # 打开 http://localhost:3000/
+npm start # 打开 http://localhost:3000/v1/articles
 ```
 
 注意：
 
 + 测试前先在 【lib】—> 【config.js】配置数据库基本信息
 + `sql` 文件在 `sql` 目录下
++ 接口请求路径可在 【routes】-> 【index.js】下查看
 
 如果在测试期间遇到什么问题, 可留言给我, 我会及时回复, 感谢～～
