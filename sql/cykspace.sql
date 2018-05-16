@@ -5,7 +5,7 @@
 # http://www.sequelpro.com/
 # https://github.com/sequelpro/sequelpro
 #
-# Host: 47.98.208.58 (MySQL 5.6.33)
+# Host: (MySQL 5.6.33)
 # Database: cykspace
 # Generation Time: 2018-05-16 12:45:53 +0000
 # ************************************************************
