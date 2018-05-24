@@ -11,6 +11,7 @@ const getArticles = async ctx => {
   let condition = '' // 查询条件
   let postIdList = []
   let result = [] // 返回标签对应的文章信息
+  let getDetailsArray = []
   if (ctx.request && ctx.request.query.tagId) {
     condition = {
       where: {
@@ -30,10 +31,11 @@ const getArticles = async ctx => {
     }
   })
   for (let i = 0; i < postIdList.length; i++) {
-    await articles.getDetails(postIdList[i]).then(data => {
-      result.push(data[0])
-    })
+    getDetailsArray.push(articles.getDetails(postIdList[i]))
   }
+  await Promise.all(getDetailsArray).then(data => {
+    result = data
+  })
   return result
 }
 
