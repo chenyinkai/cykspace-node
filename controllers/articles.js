@@ -1,6 +1,7 @@
+const Sequelize = require('sequelize')
 const articles = require('../modals/articles')
 /**
- * 待完成
+ * 查询文章列表
  *
  * @param  {pageSize, pageNum} 每页展示条数, 页码
  * @return {JSONArray} 返回标签对应的文章信息
@@ -128,8 +129,51 @@ const getDetail = async ctx => {
     })
 }
 
+/**
+ * 阅读次数递增接口
+ * POST
+ * @param  {postId} 文章Id
+ * @return {JSON} Id, 阅读次数
+ */
+const readNumIncrease = async ctx => {
+  const postId = ctx.request.body.postId
+  await articles.update({
+    readNum: Sequelize.literal('readNum + 1')
+  }, {
+    where: {
+      postId: postId
+    }
+  }).catch(err => {
+    ctx.body = {
+      msg: err,
+      status: 999999
+    }
+  })
+  await articles
+    .findAll({
+      where: {
+        postId: postId
+      },
+      attributes: ['readNum']
+    })
+    .then(data => {
+      ctx.body = {
+        msg: '阅读次数查询成功',
+        status: 200,
+        postId: postId,
+        readCount: data[0].dataValues.readNum
+      }
+    }).catch(err => {
+      ctx.body = {
+        msg: err,
+        status: 999999
+      }
+    })
+}
+
 module.exports = {
   getArticles,
   getDetails,
-  getDetail
+  getDetail,
+  readNumIncrease
 }
