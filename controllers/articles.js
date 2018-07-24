@@ -1,5 +1,5 @@
 const Sequelize = require('sequelize')
-const articles = require('../modals/articles')
+const articles = require('../models/articles')
 /**
  * 查询文章列表
  *

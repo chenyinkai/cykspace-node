@@ -1,4 +1,4 @@
-const tags = require('../modals/tags')
+const tags = require('../models/tags')
 const relations = require('../controllers/relations')
 
 /**

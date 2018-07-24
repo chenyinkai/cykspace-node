@@ -1,4 +1,4 @@
-const relations = require('../modals/relations')
+const relations = require('../models/relations')
 const articles = require('../controllers/articles')
 
 /**
